@@ -416,7 +416,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "\"$PROJECT_DIR/script/compile.sh\"";
+			shellScript = "#\"$PROJECT_DIR/script/compile.sh\"";
 			showEnvVarsInLog = 0;
 		};
 /* End PBXShellScriptBuildPhase section */
@@ -477,6 +477,7 @@
 				GCC_PREFIX_HEADER = Atomicity_Prefix.pch;
 				INFOPLIST_FILE = "Atomicity-Info.plist";
 				INSTALL_PATH = "$(HOME)/Applications";
+				MACOSX_DEPLOYMENT_TARGET = 10.5;
 				PRODUCT_NAME = Atomicity;
 			};
 			name = Debug;
@@ -495,6 +496,7 @@
 				GCC_PREFIX_HEADER = Atomicity_Prefix.pch;
 				INFOPLIST_FILE = "Atomicity-Info.plist";
 				INSTALL_PATH = "$(HOME)/Applications";
+				MACOSX_DEPLOYMENT_TARGET = 10.5;
 				PRODUCT_NAME = Atomicity;
 			};
 			name = Release;
