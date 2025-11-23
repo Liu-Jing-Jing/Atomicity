@@ -18,7 +18,7 @@
 - (void)windowDidLoad {
   [super windowDidLoad];
   
-  [self setShouldCascadeWindows:NO];
+  [self setShouldCascadeWindows:true];
   [self setWindowFrameAutosaveName:@"atomWindow"];
   
   id path = [[NSBundle mainBundle] URLForResource:@"index" withExtension:@"html"];
