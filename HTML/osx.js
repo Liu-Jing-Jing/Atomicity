@@ -55,7 +55,8 @@
         editor.getSession().setValue(wife_happy)
       return c.window.makeKeyAndOrderFront(true);
     },
-    openURL: function () {
+    openURL: function (url) {
+      console.log('url'+url)
       c = OSX.AtomWindowController.alloc.initWithURL(url)
       c.window
       c.window.makeKeyAndOrderFront(null)
@@ -124,13 +125,15 @@
     File.write(filename, editor.getSession().getValue());
     return setMode();
   };
-  open = function () {
-    var docTitle = _.last(filename.split('/'));
-    console.log('打开的文件名' + docTitle)
-    Chrome.title(docTitle);
-    // 修正标题的复制
-    editor.getSession().setValue(File.read(filename));
-    setMode();
+  open = function() {
+    if (/png|jpe?g|gif|mov|m4v|mp3|mp4/i.test(filename)) {
+      Chrome.openURL(filename);
+    } else {
+      Chrome.title(_.last(filename.split('/')));
+      editor.getSession().setValue(File.read(filename));
+      setMode();
+      Chrome.setDirty(false);
+    }
   };
   setMode = function () {
     if (/\.js$/.test(filename)) {
@@ -152,6 +155,13 @@
     if (file = Chrome.openPanel()) {
       filename = file;
       open();
+    }
+  });
+  bindKey('openURL', 'Command-Shift-O', function(env, args, request) {
+    var url;
+          console.log('url')
+    if (url = prompt("Enter URL:")) {
+      Chrome.openURL(url);
     }
   });
   Chrome.bindKey('saveAs', 'Command-Shift-S', function (env, args, request) {
