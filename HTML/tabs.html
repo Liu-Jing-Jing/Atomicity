@@ -1,0 +1,276 @@
+<html>
+
+<head>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font: 12px "Lucida Grande", Helvetica, Arial, serif;
+      overflow: hidden;
+      background-color: #000000;
+    }
+
+    iframe {
+      border: 0;
+    }
+
+    .clearfix:after {
+      visibility: hidden;
+      display: block;
+      font-size: 0;
+      content: " ";
+      clear: both;
+      height: 0;
+    }
+
+    #tabs {
+      background: -webkit-gradient(linear, left top, left bottom, from(#EEEEEE), to(#D8D7D8));
+      padding: 3px 0 0 0;
+    }
+
+    #tabs .add a {
+      width: 12px;
+      height: 12px;
+
+      margin-top: 2px;
+      margin-left: 10px;
+      padding: 2px;
+
+      font-size: 15px;
+      font-weight: bold;
+      color: #fff;
+      text-shadow: #000 1px 1px 0;
+      background: #d8d7d8;
+      border: 1px solid #a0a0a0;
+      border-bottom: none;
+
+      -webkit-border-top-right-radius: 10px 5px;
+      -webkit-border-top-left-radius: 10px 5px;
+      -webkit-box-shadow: inset 0 1px 0 white;
+    }
+
+    #tabs .add span {
+      display: block;
+      margin-top: -4px;
+    }
+
+    #tabs ul {
+      list-style: none;
+      border-bottom: 1px solid #a0a0a0;
+    }
+
+    #tabs ul li {
+      display: inline;
+    }
+
+    #tabs ul li.active a {
+      position: relative;
+      z-index: 1;
+      height: 8px;
+      background: #eee;
+      padding-top: 4px;
+    }
+
+    #tabs ul li a {
+      display: block;
+      float: left;
+      text-decoration: none;
+      position: relative;
+      height: 8px;
+
+      padding: 3px 50px 7px;
+      margin: 0 -5px 0 0;
+      color: #222;
+      background: #d8d7d8;
+
+      -webkit-border-top-right-radius: 10px 20px;
+      -webkit-border-top-left-radius: 10px 20px;
+      -webkit-box-shadow: inset 1px 1px 0 white;
+
+      border: 1px solid #a0a0a0;
+      border-bottom: 0;
+    }
+
+    .content {
+      -webkit-box-shadow: inset 0 1px 0 white;
+      -moz-box-shadow: inset 0 1px 0 white;
+      height: 97%;
+    }
+  </style>
+</head>
+
+<body>
+
+  <div id="tabs">
+    <ul class="clearfix">
+      <li class="active"><a href="#">untitled</a></li>
+      <li class="add"><a href="#"><span>+</span></a></li>
+    </ul>
+  </div>
+
+  <div class="content">
+    <iframe src="editor.html" width="100%" height="100%"></iframe>
+    <iframe src="editor.html" width="100%" height="100%" style="display:none"></iframe>
+  </div>
+
+  <script>
+    // 解决IE9及其以下 不支持classList属性的问题
+    if (!("classList" in document.documentElement)) {
+      Object.defineProperty(HTMLElement.prototype, "classList", {
+        get: function () {
+          var self = this;
+          function update(fn) {
+            return function (value) {
+              var classes = self.className.split(/\s+/g),
+                index = classes.indexOf(value);
+
+              fn(classes, index, value);
+              self.className = classes.join(" ");
+            };
+          }
+          return {
+            add: update(function (classes, index, value) {
+              if (!~index) classes.push(value);
+              console.log(classes);
+            }),
+
+            remove: update(function (classes, index) {
+              if (~index) classes.splice(index, 1);
+              console.log(classes);
+            }),
+
+            toggle: update(function (classes, index, value) {
+              if (~index) classes.splice(index, 1);
+              else classes.push(value);
+            }),
+
+            contains: function (value) {
+              return !!~self.className.split(/\s+/g).indexOf(value);
+            },
+
+            item: function (i) {
+              return self.className.split(/\s+/g)[i] || null;
+            },
+          };
+        },
+      });
+    }
+    function closest(elem, selector) {
+      var matches = (elem.matches || elem.msMatchesSelector || elem.webkitMatchesSelector);
+      while (elem) {
+        if (matches.call(elem, selector)) {
+          return elem;
+        } else {
+          elem = elem.parentElement;
+        }
+      }
+      return null;
+    }
+    // awesome hover effect
+    if (false) {
+      var nonActiveLinks = document.querySelectorAll('#tabs ul li:not(.active) a');
+      for (var index = 0; index < nonActiveLinks.length; index++) {
+        var link = nonActiveLinks[index]
+        link.addEventListener('mousemove', function (e) {
+          var originalBG = getComputedStyle(this).backgroundColor;
+          var rect = this.getBoundingClientRect();
+          var x = e.pageX - rect.left;
+          var y = e.pageY - rect.top;
+          var xy = x + ' ' + y;
+
+          // var bgWebKit = '-webkit-gradient(radial, '+ (x + y)  + ', 0,' + xy}, 100, from(rgba(255,255,255,0.8)), to(rgba(255,255,255,0.0))), ${originalBG}`;
+          // this.style.background = bgWebKit;
+        });
+
+        link.addEventListener('mouseleave', function (e) {
+          this.removeAttribute('style');
+        });
+      }
+    }
+
+    // events
+    // 事件委托处理标签点击
+    document.querySelector('#tabs ul').addEventListener('click', function (e) {
+      var target = e.target;
+
+      // 检查点击的是否是非.add类的li中的a标签
+      if (target.tagName === 'A' && !closest(target, 'li').classList.contains('add')) {
+        e.preventDefault();
+
+        // 移除所有active类
+        var activeItems = document.querySelectorAll('#tabs ul .active');
+        for (var index = 0; index < activeItems.length; index++) {
+          const item = activeItems[index];
+          item.classList.remove('active');
+        }
+
+        // 给当前li添加active类
+        closest(target, 'li').classList.add('active');
+
+        // 显示对应的iframe
+        var allLinks = document.querySelectorAll('#tabs ul li:not(.add) a');
+        var index = Array.from(allLinks).indexOf(target);
+        var iframes = document.querySelectorAll('.content iframe');
+
+        // 隐藏所有iframe
+        for (var index = 0; index < iframes.length; index++) {
+          const iframe = iframes[index];
+          iframe.style.display = 'none';
+        }
+
+        // 显示对应索引的iframe
+        if (iframes[index]) {
+          iframes[index].style.display = 'block';
+          iframes[index].focus();
+        }
+      }
+    });
+
+    // 添加新标签的事件
+    document.querySelector('#tabs .add a').addEventListener('click', function (e) {
+      e.preventDefault();
+
+      // 移除所有active类
+      var activeItems = document.querySelectorAll('#tabs ul .active');
+      for (var index = 0; index < activeItems.length; index++) {
+        const item = activeItems[index];
+        item.classList.remove('active');
+      }
+      // 创建新标签
+      var addElement = document.querySelector('#tabs ul .add');
+      var newLi = document.createElement('li');
+      var newLink = document.createElement('a');
+      newLink.href = '#';
+      newLink.textContent = 'untitled';
+      newLi.appendChild(newLink);
+
+      // 在.add之前插入新标签
+      addElement.parentNode.insertBefore(newLi, addElement);
+
+      // 隐藏所有iframe
+      var iframes = document.querySelectorAll('.content iframe');
+      for (var index = 0; index < iframes.length; index++) {
+        const iframe = iframes[index];
+        iframe.style.display = 'none';
+      }
+
+      // 添加新iframe
+      var content = document.querySelector('.content');
+      var newIframe = document.createElement('iframe');
+      newIframe.src = 'editor.html';
+      newIframe.width = '100%';
+      newIframe.height = '100%';
+      content.appendChild(newIframe);
+
+      // 给新标签添加active类
+      addElement.previousElementSibling.classList.add('active');
+
+      return false;
+    });
+  </script>
+</body>
+
+</html>
