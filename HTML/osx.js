@@ -6,7 +6,7 @@
   Chrome = {
     title: function (text) {
       console.log(text)
-      App.window.title = text;
+      WindowController.window.title = text;
     },
     activeWindow: function () {
       OSX.NSApplication.sharedApplication.keyWindow
@@ -26,6 +26,14 @@
         case 'right': return horizontalDiv.append(el);
         default: return NSLog("I DON'T KNOW HOW TO DEAL WITH " + position);
       }
+    },
+    // Set the active window's dirty status.
+    setDirty: function (bool) {
+      Chrome.activeWindow().setDocumentEdited(bool);
+    },
+    // Returns a boolean
+    dirty: function (bool) {
+      Chrome.activeWindow().isDocumentEdited()
     },
     createWindow: function (path) {
       var c;
@@ -52,11 +60,11 @@
         }).join('\n');
       }
       // console.log(wife_happy)
-        editor.getSession().setValue(wife_happy)
+      editor.getSession().setValue(wife_happy)
       return c.window.makeKeyAndOrderFront(true);
     },
     openURL: function (url) {
-      console.log('url'+url)
+      console.log('url' + url)
       c = OSX.AtomWindowController.alloc.initWithURL(url)
       c.window
       c.window.makeKeyAndOrderFront(null)
@@ -125,7 +133,7 @@
     File.write(filename, editor.getSession().getValue());
     return setMode();
   };
-  open = function() {
+  open = function () {
     if (/png|jpe?g|gif|mov|m4v|mp3|mp4/i.test(filename)) {
       Chrome.openURL(filename);
     } else {
@@ -146,7 +154,7 @@
     var file;
     if (file = Chrome.savePanel()) {
       filename = file;
-      App.window.title = _.last(filename.split('/'));
+      WindowController.window.title = _.last(filename.split('/'));
       return save();
     }
   };
@@ -157,9 +165,9 @@
       open();
     }
   });
-  bindKey('openURL', 'Command-Shift-O', function(env, args, request) {
+  Chrome.bindKey('openURL', 'Command-Shift-O', function (env, args, request) {
     var url;
-          console.log('url')
+    console.log('url')
     if (url = prompt("Enter URL:")) {
       Chrome.openURL(url);
     }
