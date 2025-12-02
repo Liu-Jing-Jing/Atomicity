@@ -157,7 +157,7 @@
       open();
     }
   });
-  bindKey('openURL', 'Command-Shift-O', function(env, args, request) {
+  Chrome.bindKey('openURL', 'Command-Shift-O', function(env, args, request) {
     var url;
           console.log('url')
     if (url = prompt("Enter URL:")) {

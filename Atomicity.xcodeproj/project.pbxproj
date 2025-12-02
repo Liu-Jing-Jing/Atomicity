@@ -246,10 +246,8 @@
 				8359A60213FE1FBF00AC37E3 /* ace */,
 				8359A04B13FE18FD00AC37E3 /* gh.png */,
 				4D529DD02ED34BAD007B08A9 /* osx.js */,
-				83DBC6E914038CD300688796 /* jquery.js */,
 				8393431113FE39D800EF93FB /* underscore.js */,
 				83599FED13FE15F800AC37E3 /* index.html */,
-				83DBC6FC14038E7E00688796 /* coffee-script.js */,
 				83DBC6E914038CD300688796 /* jquery.js */,
 				83DBC6FC14038E7E00688796 /* coffee-script.js */,
 			);
@@ -346,6 +344,8 @@
 /* Begin PBXProject section */
 		29B97313FDCFA39411CA2CEA /* Project object */ = {
 			isa = PBXProject;
+			attributes = {
+			};
 			buildConfigurationList = C01FCF4E08A954540054247B /* Build configuration list for PBXProject "Atomicity" */;
 			compatibilityVersion = "Xcode 3.1";
 			developmentRegion = English;
@@ -497,6 +497,7 @@
 				INSTALL_PATH = "$(HOME)/Applications";
 				MACOSX_DEPLOYMENT_TARGET = 10.5;
 				PRODUCT_NAME = Atomicity;
+				SDKROOT = macosx;
 			};
 			name = Debug;
 		};
@@ -516,6 +517,7 @@
 				INSTALL_PATH = "$(HOME)/Applications";
 				MACOSX_DEPLOYMENT_TARGET = 10.5;
 				PRODUCT_NAME = Atomicity;
+				SDKROOT = macosx;
 			};
 			name = Release;
 		};
